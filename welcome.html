@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSPIA — Welcome Scene</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Poppins','Segoe UI',Arial,sans-serif; min-height:100vh; overflow-x:hidden; background:#0C2154; }
+
+  /* ---- BACKGROUND LAYER ----
+     Step 1: To use YOUR photo (e.g. the image you showed), save it as:
+         assets/welcome-bg.jpg   (in this folder)
+     It will appear automatically, blurred behind the phone.
+     Step 2: (optional) adjust blur/darkness with the values below.        */
+  .bg {
+    position:fixed; inset:-25px;           /* oversized so blur has no soft edges */
+    background:
+      url('assets/welcome-bg.jpg') center/cover no-repeat,
+      linear-gradient(165deg,#122F72 0%,#0C2154 55%,#091838 100%);
+    filter:blur(9px) saturate(1.15);
+    transform:scale(1.05);
+    animation:bgdrift 26s ease-in-out infinite alternate;
+  }
+  @keyframes bgdrift { from { transform:scale(1.05) translate(0,0);} to { transform:scale(1.10) translate(-14px,-10px);} }
+  /* Built-in atmosphere: soft bokeh lights (always on — they glow over any photo) */
+  .bokeh { position:fixed; inset:0; pointer-events:none; }
+  .bokeh i { position:absolute; border-radius:50%; filter:blur(2px); opacity:.5; animation:pulse 6s ease-in-out infinite alternate; }
+  .bokeh i:nth-child(1){ width:90px;height:90px; left:8%;  top:12%;  background:radial-gradient(circle,rgba(212,175,55,.55),rgba(212,175,55,0)); }
+  .bokeh i:nth-child(2){ width:150px;height:150px; left:82%; top:8%;  background:radial-gradient(circle,rgba(61,139,253,.5),rgba(61,139,253,0)); animation-delay:1.4s; }
+  .bokeh i:nth-child(3){ width:70px;height:70px;  left:88%; top:58%;  background:radial-gradient(circle,rgba(212,175,55,.45),rgba(212,175,55,0)); animation-delay:2.6s; }
+  .bokeh i:nth-child(4){ width:120px;height:120px;left:4%;  top:66%;  background:radial-gradient(circle,rgba(61,139,253,.4),rgba(61,139,253,0)); animation-delay:.8s; }
+  .bokeh i:nth-child(5){ width:60px;height:60px;  left:74%; top:82%;  background:radial-gradient(circle,rgba(255,255,255,.35),rgba(255,255,255,0)); animation-delay:3.4s; }
+  @keyframes pulse { from{ transform:translateY(0); opacity:.35;} to{ transform:translateY(-18px); opacity:.65;} }
+  /* readability veil */
+  .veil { position:fixed; inset:0; background:linear-gradient(180deg,rgba(9,24,56,.35),rgba(9,24,56,.15) 40%,rgba(9,24,56,.55)); }
+
+  /* ---- SCENE ---- */
+  .scene { position:relative; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 16px; }
+  .phone-wrap { animation:floaty 5.5s ease-in-out infinite; }
+  @keyframes floaty { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-12px);} }
+
+  .phone { width:340px; height:700px; background:#0a0a0a; border-radius:52px; padding:11px; box-shadow:0 40px 90px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.06) inset; }
+  .screen { height:100%; border-radius:42px; overflow:hidden; position:relative;
+    background:linear-gradient(180deg,#122F72 0%,#16397F 45%,#1E4A9E 78%,#2E6ABF 100%);
+    display:flex; flex-direction:column; align-items:center; text-align:center; padding:64px 28px 34px; color:#fff; }
+  /* subtle spark field inside the screen */
+  .screen::before { content:"✦  ✦     ✦    ✦   ✦     ✦    ✦"; position:absolute; top:14px; left:0; right:0; font-size:13px; letter-spacing:26px; color:rgba(212,175,55,.35); }
+
+  .logo-mark { width:104px; height:104px; border-radius:26px; background:rgba(255,255,255,.07); border:1px solid rgba(212,175,55,.35); display:flex; align-items:center; justify-content:center; margin-bottom:22px; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  h1 { font-size:40px; font-weight:700; letter-spacing:9px; text-indent:9px; }
+  .tag { font-size:11px; letter-spacing:4px; color:#D4AF37; margin:6px 0 26px; font-weight:500; }
+  .lead { font-size:15.5px; line-height:1.75; color:#EDEFF5; font-weight:400; margin-bottom:34px; max-width:250px; }
+
+  .cta { width:100%; min-height:54px; border:none; border-radius:999px; background:linear-gradient(180deg,#E3C24B,#D4AF37); color:#111; font-family:inherit; font-size:16px; font-weight:600; cursor:pointer; box-shadow:0 10px 26px rgba(212,175,55,.35); transition:transform .15s ease, box-shadow .15s ease; }
+  .cta:hover { transform:translateY(-2px); box-shadow:0 14px 32px rgba(212,175,55,.5); }
+  .cta:active { transform:translateY(0); }
+  .secondary { margin-top:18px; color:#EDEFF5; font-size:14px; font-weight:500; text-decoration:underline; text-underline-offset:4px; cursor:pointer; }
+  .founding { margin-top:auto; font-size:11.5px; color:rgba(237,239,245,.75); }
+  .founding b { color:#D4AF37; font-weight:600; }
+
+  .caption { margin-top:26px; text-align:center; color:rgba(255,255,255,.85); font-size:12.5px; letter-spacing:.4px; text-shadow:0 1px 8px rgba(0,0,0,.5); }
+  .caption b { color:#D4AF37; }
+
+  /* ---- SMALL SCREENS: become the app itself ---- */
+  @media (max-width:430px) {
+    .phone-wrap { animation:none; width:100%; }
+    .phone { width:100%; height:100vh; border-radius:0; padding:0; box-shadow:none; }
+    .screen { border-radius:0; padding-top:80px; }
+    .caption { display:none; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="bokeh"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="veil"></div>
+
+  <div class="scene">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="screen">
+          <div class="logo-mark">
+            <!-- Official INSPIA "Spark & Book" mark -->
+            <svg width="62" height="62" viewBox="0 0 512 512">
+              <path d="M112 304 C160 278 208 284 248 306 L248 394 C208 372 160 366 112 392 Z" fill="#FFFFFF"/>
+              <path d="M400 304 C352 278 304 284 264 306 L264 394 C304 372 352 366 400 392 Z" fill="#F0F0F0"/>
+              <rect x="252" y="300" width="8" height="96" rx="4" fill="#D4AF37"/>
+              <path d="M256 88 L282 150 L344 176 L282 202 L256 264 L230 202 L168 176 L230 150 Z" fill="#D4AF37"/>
+            </svg>
+          </div>
+          <h1>INSPIA</h1>
+          <div class="tag">SOCIAL INNOVATION NETWORK</div>
+          <p class="lead">Where Africa's students, creators, mentors and builders learn, connect and grow together.</p>
+          <button class="cta" onclick="this.textContent='✦ You\'re on the list — welcome!'; this.disabled=true;">Join the Waiting List</button>
+          <span class="secondary" onclick="alert('Prototype: this opens the login screen.')">I already have an account</span>
+          <p class="founding">Early members become <b>Founding Members ✦</b> — permanent badge, forever.</p>
+        </div>
+      </div>
+    </div>
+    <p class="caption">INSPIA Social Innovation Network · <b>Launching soon</b> · Brand-perfect welcome scene (v1.0)</p>
+  </div>
+</body>
+</html>
