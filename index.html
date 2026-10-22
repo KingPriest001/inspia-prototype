@@ -1,0 +1,521 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSPIA â€” Clickable Prototype v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =============================================
+   INSPIA DESIGN TOKENS â€” v1.0 (Phase 0)
+   The single source of truth for all styling.
+   Every colour, size, and spacing value used in
+   the app MUST come from this file.
+   ============================================= */
+
+/* ---- FONTS ---- */
+
+:root {
+  /* ---- COLOURS: PRIMARY ---- */
+  --inspia-blue:        #122F72;   /* Royal Blue â€” headers, primary actions   */
+  --inspia-blue-dark:   #0C2154;   /* Pressed states, dark backgrounds        */
+  --inspia-blue-light:  #E8ECF7;   /* Soft tint for section backgrounds       */
+  --inspia-gold:        #D4AF37;   /* Deep Gold â€” accents, spark, highlights  */
+  --inspia-gold-dark:   #B3922C;   /* Gold pressed state                      */
+  --inspia-gold-light:  #F7EFDA;   /* Gold tint backgrounds                   */
+
+  /* ---- COLOURS: NEUTRALS ---- */
+  --inspia-white:       #FFFFFF;
+  --inspia-black:       #111111;
+  --inspia-grey-50:     #F0F0F0;   /* Soft Grey â€” card & input backgrounds    */
+  --inspia-grey-200:    #D9D9D9;   /* Borders, dividers                       */
+  --inspia-grey-500:    #757575;   /* Secondary text                          */
+  --inspia-grey-700:    #444444;   /* Body text on light                      */
+
+  /* ---- COLOURS: SEMANTIC (status) ---- */
+  --inspia-success:     #2E9E5B;   /* Digital green â€” success, online         */
+  --inspia-warning:     #E8890C;   /* Innovation orange â€” warnings            */
+  --inspia-danger:      #C9302C;   /* Errors, destructive actions             */
+  --inspia-info:        #3D8BFD;   /* Light tech blue â€” tips, info            */
+
+  /* ---- TYPOGRAPHY ---- */
+  --font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  --text-title:    28px;  /* Screen titles            */
+  --text-heading:  22px;  /* Section headings         */
+  --text-subtitle: 17px;  /* Card titles, subtitles   */
+  --text-body:     15px;  /* Normal reading text      */
+  --text-small:    13px;  /* Captions, labels         */
+  --text-tiny:     11px;  /* Badges, timestamps       */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --line-height: 1.55;
+
+  /* ---- SPACING (4pt system) ---- */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 20px;  --space-6: 24px;  --space-8: 32px;  --space-10: 40px;
+  --space-12: 48px; --space-16: 64px;
+
+  /* ---- SHAPES ---- */
+  --radius-small:  8px;    /* Inputs, small chips      */
+  --radius-medium: 16px;   /* Cards, popups            */
+  --radius-large:  24px;   /* Sheets, hero cards       */
+  --radius-full:   999px;  /* Buttons, avatars, pills  */
+
+  /* ---- SHADOWS ---- */
+  --shadow-1: 0 1px 3px rgba(18, 47, 114, 0.08);
+  --shadow-2: 0 4px 12px rgba(18, 47, 114, 0.12);
+  --shadow-3: 0 12px 32px rgba(18, 47, 114, 0.18);
+
+  /* ---- INTERACTION ---- */
+  --transition: 180ms ease;
+  --tap-target: 44px;  /* Minimum tappable size (accessibility) */
+}
+
+</style>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: var(--font-family); background: linear-gradient(160deg, #0C2154, #122F72 60%, #1a3d8f); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:32px 16px; }
+  .proto-note { color:#F0F0F0; text-align:center; margin-bottom:20px; max-width:420px; font-size:13px; line-height:1.6; }
+  .proto-note b { color: var(--inspia-gold); }
+  /* Phone frame */
+  .phone { width:390px; height:800px; background:#000; border-radius:48px; padding:12px; box-shadow: 0 30px 80px rgba(0,0,0,0.5); flex-shrink:0; }
+  .screen-area { width:100%; height:100%; background: var(--inspia-grey-50); border-radius:38px; overflow:hidden; position:relative; }
+  /* Screens */
+  .screen { display:none; height:100%; flex-direction:column; }
+  .screen.active { display:flex; }
+  .scroll { flex:1; overflow-y:auto; padding:20px 18px 16px; }
+  .scroll::-webkit-scrollbar { width:0; }
+  /* App bars */
+  .appbar { background: var(--inspia-blue); color:white; padding:44px 18px 14px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .appbar h1 { font-size:20px; font-weight:700; }
+  .appbar .back { cursor:pointer; font-size:18px; padding:4px 8px; }
+  .appbar .spacer { flex:1; }
+  .appbar .ico { font-size:18px; cursor:pointer; position:relative; }
+  .appbar .dot { position:absolute; top:-2px; right:-4px; width:8px; height:8px; background:var(--inspia-gold); border-radius:50%; }
+  /* Bottom nav */
+  .nav { display:flex; background:white; padding:8px 0 18px; box-shadow:0 -4px 12px rgba(18,47,114,0.08); flex-shrink:0; }
+  .nav div { flex:1; text-align:center; font-size:10px; color:var(--inspia-grey-500); cursor:pointer; }
+  .nav div .ic { display:block; font-size:20px; margin-bottom:2px; }
+  .nav div.on { color:var(--inspia-blue); font-weight:600; }
+  .nav div.on .ic { filter: drop-shadow(0 2px 4px rgba(212,175,55,0.6)); }
+  /* Reusable pieces */
+  .btn { width:100%; min-height:46px; border:none; border-radius:999px; font-family:var(--font-family); font-size:15px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .btn-blue { background:var(--inspia-blue); color:white; }
+  .btn-gold { background:var(--inspia-gold); color:#111; }
+  .btn-ghost { background:transparent; color:var(--inspia-blue); }
+  .btn-outline { background:transparent; color:var(--inspia-blue); border:2px solid var(--inspia-blue); }
+  .input { width:100%; min-height:46px; border:2px solid var(--inspia-grey-200); border-radius:8px; padding:0 14px; font-family:var(--font-family); font-size:15px; background:white; margin-bottom:12px; }
+  .input:focus { outline:none; border-color:var(--inspia-blue); }
+  label.f { display:block; font-size:13px; font-weight:500; color:var(--inspia-blue); margin-bottom:4px; }
+  .card { background:white; border-radius:16px; box-shadow:0 1px 3px rgba(18,47,114,0.08); padding:14px; margin-bottom:12px; }
+  .badge { display:inline-flex; padding:2px 10px; border-radius:999px; font-size:10px; font-weight:600; }
+  .b-gold { background:var(--inspia-gold-light); color:var(--inspia-gold-dark); }
+  .b-blue { background:var(--inspia-blue-light); color:var(--inspia-blue); }
+  .b-green { background:#E4F5EB; color:#2E9E5B; }
+  .row { display:flex; gap:10px; align-items:center; }
+  .muted { color:var(--inspia-grey-500); font-size:12px; }
+  .section-title { font-size:15px; font-weight:600; color:var(--inspia-black); margin:14px 0 10px; display:flex; justify-content:space-between; }
+  .section-title span { color:var(--inspia-gold-dark); font-size:12px; font-weight:500; cursor:pointer; }
+  /* Welcome screen */
+  .welcome { background: linear-gradient(160deg, #122F72, #0C2154); color:white; justify-content:center; align-items:center; text-align:center; padding:40px 30px; }
+  .welcome .logo-mark { width:96px; height:96px; border-radius:24px; background:var(--inspia-blue-dark); display:flex; align-items:center; justify-content:center; margin-bottom:24px; box-shadow:0 12px 32px rgba(0,0,0,0.4); }
+  .welcome h1 { font-size:32px; font-weight:700; letter-spacing:6px; }
+  .welcome .tag { color:var(--inspia-gold); font-size:11px; letter-spacing:3px; margin:6px 0 20px; }
+  .welcome p { font-size:14px; color:#D9D9D9; line-height:1.7; margin-bottom:36px; }
+  .welcome .btn-ghost { color:#F0F0F0; }
+  /* Home widgets */
+  .hero { background:linear-gradient(135deg, var(--inspia-blue), var(--inspia-blue-dark)); border-radius:16px; padding:18px; color:white; margin-bottom:14px; position:relative; overflow:hidden; }
+  .hero::after { content:"âœ¦"; position:absolute; right:-10px; top:-18px; font-size:96px; color:rgba(212,175,55,0.25); }
+  .hero b { font-size:16px; display:block; margin-bottom:4px; }
+  .hero p { font-size:12px; color:#D9D9D9; margin-bottom:12px; }
+  .hero .btn { width:auto; padding:0 18px; min-height:36px; font-size:13px; }
+  .chip-row { display:flex; gap:8px; overflow-x:auto; margin-bottom:14px; }
+  .chip { flex-shrink:0; background:white; border-radius:999px; padding:7px 14px; font-size:12px; font-weight:500; color:var(--inspia-blue); box-shadow:0 1px 3px rgba(18,47,114,0.08); cursor:pointer; }
+  .chip.on { background:var(--inspia-blue); color:white; }
+  .book-row { display:flex; gap:12px; overflow-x:auto; padding-bottom:4px; }
+  .book { flex-shrink:0; width:100px; cursor:pointer; }
+  .book .cover { height:134px; border-radius:8px; background:linear-gradient(135deg,#122F72,#0C2154); box-shadow:0 4px 12px rgba(18,47,114,0.2); display:flex; align-items:flex-end; padding:8px; color:var(--inspia-gold); font-size:24px; }
+  .book .t { font-size:11px; font-weight:600; color:var(--inspia-black); margin-top:6px; line-height:1.3; }
+  .book .m { font-size:10px; color:var(--inspia-grey-500); }
+  .stat-row { display:flex; gap:10px; margin-bottom:14px; }
+  .stat { flex:1; background:white; border-radius:16px; box-shadow:0 1px 3px rgba(18,47,114,0.08); padding:12px; text-align:center; }
+  .stat b { display:block; font-size:18px; color:var(--inspia-blue); }
+  .stat span { font-size:10px; color:var(--inspia-grey-500); }
+  /* Feed */
+  .post .head { display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+  .av { width:40px; height:40px; border-radius:50%; background:var(--inspia-blue-light); color:var(--inspia-blue); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
+  .post .body { font-size:13px; line-height:1.6; color:var(--inspia-grey-700); }
+  .post .acts { display:flex; gap:18px; margin-top:10px; padding-top:10px; border-top:1px solid var(--inspia-grey-50); font-size:11px; color:var(--inspia-grey-500); }
+  .post .acts span { cursor:pointer; }
+  /* Reader */
+  .reader-tools { background:white; padding:10px 18px; display:flex; gap:10px; align-items:center; box-shadow:0 1px 3px rgba(18,47,114,0.08); flex-shrink:0; font-size:12px; color:var(--inspia-blue); }
+  .reader-body { background:white; flex:1; overflow-y:auto; padding:24px 26px; font-size:14px; line-height:1.9; color:#222; }
+  .reader-body h2 { font-size:19px; color:var(--inspia-blue); margin-bottom:14px; }
+  .reader-progress { height:4px; background:var(--inspia-grey-50); flex-shrink:0; }
+  .reader-progress span { display:block; height:100%; width:42%; background:var(--inspia-gold); }
+  /* Compose */
+  .compose-area { flex:1; padding:18px; display:flex; flex-direction:column; }
+  .compose-area textarea { flex:1; border:none; font-family:var(--font-family); font-size:15px; resize:none; outline:none; line-height:1.7; }
+  /* Profile */
+  .prof-head { background:linear-gradient(135deg,var(--inspia-blue),var(--inspia-blue-dark)); color:white; text-align:center; padding:50px 18px 24px; }
+  .prof-head .av { width:76px; height:76px; margin:0 auto 10px; background:var(--inspia-gold); color:#111; font-size:26px; border:3px solid var(--inspia-gold); }
+  .prof-head h2 { font-size:19px; }
+  .prof-head p { font-size:12px; color:#D9D9D9; }
+  .list-item { background:white; border-radius:14px; box-shadow:0 1px 3px rgba(18,47,114,0.08); padding:14px; margin-bottom:10px; display:flex; align-items:center; gap:12px; font-size:14px; cursor:pointer; color:var(--inspia-grey-700); }
+  .list-item .ic { font-size:18px; }
+  .list-item .arr { margin-left:auto; color:var(--inspia-grey-200); }
+  .toggle { margin-left:auto; width:40px; height:22px; background:var(--inspia-success); border-radius:999px; position:relative; }
+  .toggle::after { content:""; position:absolute; width:16px; height:16px; background:white; border-radius:50%; top:3px; right:3px; }
+  .toggle.off { background:var(--inspia-grey-200); }
+  .toggle.off::after { right:auto; left:3px; }
+  /* Mentor video block */
+  .video-block { height:180px; border-radius:16px; background:linear-gradient(135deg,#0C2154,#122F72); display:flex; align-items:center; justify-content:center; color:var(--inspia-gold); font-size:52px; margin-bottom:14px; cursor:pointer; }
+  .lesson { display:flex; gap:12px; align-items:center; background:white; border-radius:14px; box-shadow:0 1px 3px rgba(18,47,114,0.08); padding:12px 14px; margin-bottom:10px; cursor:pointer; }
+  .lesson .n { width:30px; height:30px; border-radius:50%; background:var(--inspia-blue-light); color:var(--inspia-blue); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+  .lesson .n.done { background:#E4F5EB; color:#2E9E5B; }
+  .lesson b { display:block; font-size:13px; color:var(--inspia-black); }
+  .lesson span { font-size:11px; color:var(--inspia-grey-500); }
+  .lesson .st { margin-left:auto; }
+</style>
+</head>
+<body>
+
+<div class="proto-note">
+  <b>INSPIA CLICKABLE PROTOTYPE v1.0</b> â€” Phase 0 deliverable<br>
+  Tap through it like a real app: sign up, read a book, join a community, start a mentor lesson.
+  This is a simulation â€” no data is saved.
+</div>
+
+<div class="phone"><div class="screen-area">
+
+  <!-- 1. WELCOME -->
+  <div class="screen welcome active" id="s-welcome">
+    <div class="logo-mark">
+      <svg width="56" height="56" viewBox="0 0 512 512"><path d="M112 304 C160 278 208 284 248 306 L248 394 C208 372 160 366 112 392 Z" fill="#FFFFFF"/><path d="M400 304 C352 278 304 284 264 306 L264 394 C304 372 352 366 400 392 Z" fill="#F0F0F0"/><rect x="252" y="300" width="8" height="96" rx="4" fill="#D4AF37"/><path d="M256 88 L282 150 L344 176 L282 202 L256 264 L230 202 L168 176 L230 150 Z" fill="#D4AF37"/></svg>
+    </div>
+    <h1>INSPIA</h1>
+    <div class="tag">SOCIAL INNOVATION NETWORK</div>
+    <p>Where Africa's students, creators, mentors and builders learn, connect and grow â€” together.</p>
+    <button class="btn btn-gold" style="margin-bottom:10px" onclick="go('s-signup')">Create Free Account</button>
+    <button class="btn btn-ghost" onclick="go('s-login')">I already have an account</button>
+  </div>
+
+  <!-- 2. SIGN UP -->
+  <div class="screen" id="s-signup">
+    <div class="appbar"><span class="back" onclick="go('s-welcome')">â†</span><h1>Create account</h1></div>
+    <div class="scroll">
+      <label class="f">Full name</label>
+      <input class="input" placeholder="e.g. Amina Okafor">
+      <label class="f">Email address</label>
+      <input class="input" placeholder="you@example.com">
+      <label class="f">I am aâ€¦</label>
+      <div class="chip-row" style="margin-bottom:14px">
+        <span class="chip on" onclick="pick(this)">Student</span>
+        <span class="chip" onclick="pick(this)">Professional</span>
+        <span class="chip" onclick="pick(this)">Innovator</span>
+        <span class="chip" onclick="pick(this)">Entrepreneur</span>
+        <span class="chip" onclick="pick(this)">Teacher / Mentor</span>
+      </div>
+      <label class="f">Password</label>
+      <input class="input" type="password" placeholder="At least 8 characters">
+      <button class="btn btn-blue" style="margin-top:8px" onclick="go('s-home')">Create Account âœ¦</button>
+      <p class="muted" style="text-align:center;margin-top:12px">By continuing you agree to INSPIA's Terms & Privacy Policy.</p>
+    </div>
+  </div>
+
+  <!-- 3. LOGIN -->
+  <div class="screen" id="s-login">
+    <div class="appbar"><span class="back" onclick="go('s-welcome')">â†</span><h1>Welcome back</h1></div>
+    <div class="scroll">
+      <label class="f">Email address</label>
+      <input class="input" placeholder="you@example.com">
+      <label class="f">Password</label>
+      <input class="input" type="password" placeholder="Your password">
+      <p class="muted" style="text-align:right;margin:-4px 0 14px;cursor:pointer" >Forgot password?</p>
+      <button class="btn btn-blue" onclick="go('s-home')">Log In</button>
+    </div>
+  </div>
+
+  <!-- 4. HOME -->
+  <div class="screen" id="s-home">
+    <div class="appbar">
+      <svg width="30" height="30" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#D4AF37"/><path d="M112 304 C160 278 208 284 248 306 L248 394 C208 372 160 366 112 392 Z" fill="#122F72"/><path d="M400 304 C352 278 304 284 264 306 L264 394 C304 372 352 366 400 392 Z" fill="#0C2154"/><path d="M256 88 L282 150 L344 176 L282 202 L256 264 L230 202 L168 176 L230 150 Z" fill="#FFFFFF"/></svg>
+      <h1>INSPIA</h1>
+      <div class="spacer"></div>
+      <span class="ico" onclick="go('s-search')">ðŸ”</span>
+      <span class="ico" onclick="go('s-notif')" style="margin-left:14px">ðŸ””<span class="dot"></span></span>
+    </div>
+    <div class="scroll">
+      <p class="muted" style="margin-bottom:4px">Welcome back, <b style="color:var(--inspia-black)">Amina</b> ðŸ‘‹</p>
+      <div class="stat-row">
+        <div class="stat"><b>7</b><span>Day streak ðŸ”¥</span></div>
+        <div class="stat"><b>12</b><span>Books read</span></div>
+        <div class="stat"><b>3</b><span>Projects</span></div>
+      </div>
+      <div class="hero">
+        <b>Innovation Challenge 2026</b>
+        <p>Build a solution for your community. Win funding + mentorship.</p>
+        <button class="btn btn-gold" onclick="go('s-business')">Join Challenge</button>
+      </div>
+      <div class="section-title">Continue learning <span onclick="nav('learn','s-reader')">See all</span></div>
+      <div class="book-row">
+        <div class="book" onclick="go('s-reading')"><div class="cover">ðŸ“–</div><div class="t">Understanding Algebra</div><div class="m">64% complete</div></div>
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#D4AF37,#B3922C)">ðŸŒ</div><div class="t">African History & Civilisations</div><div class="m">31% complete</div></div>
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#2E9E5B,#1F7A44)">âš¡</div><div class="t">Solar Energy Basics</div><div class="m">New</div></div>
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#C9302C,#8f2320)">âš–ï¸</div><div class="t">Constitutional Law: Intro</div><div class="m">New</div></div>
+      </div>
+      <div class="section-title">Trending in your community <span onclick="nav('connect','s-feed')">See all</span></div>
+      <div class="card" style="cursor:pointer" onclick="go('s-feed')">
+        <div class="row"><div class="av">IC</div><div><b style="font-size:13px">Innovation Club</b><div class="muted">12,480 members Â· 40 posts today</div></div><span class="badge b-gold" style="margin-left:auto">Hot ðŸ”¥</span></div>
+      </div>
+    </div>
+    <div class="nav" id="nav-home"></div>
+  </div>
+
+  <!-- 5. READER HOME -->
+  <div class="screen" id="s-reader">
+    <div class="appbar"><h1>Learn</h1><div class="spacer"></div><span class="ico" onclick="go('s-search')">ðŸ”</span></div>
+    <div class="scroll">
+      <div class="search-bar" style="display:flex;background:white;border-radius:999px;padding:11px 16px;gap:8px;box-shadow:0 1px 3px rgba(18,47,114,0.08);margin-bottom:14px;color:var(--inspia-grey-500);font-size:13px;cursor:pointer" onclick="go('s-search')">ðŸ” Search 50,000+ books, papers & materialsâ€¦</div>
+      <div class="chip-row">
+        <span class="chip on">All</span><span class="chip">Primary</span><span class="chip">Secondary</span><span class="chip">University</span><span class="chip">Research</span><span class="chip">Skills</span><span class="chip">Law</span>
+      </div>
+      <div class="section-title">My bookshelf <span>Offline Â· 4 books</span></div>
+      <div class="book-row">
+        <div class="book" onclick="go('s-reading')"><div class="cover">ðŸ“–</div><div class="t">Understanding Algebra</div><div class="m">64% complete</div></div>
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#D4AF37,#B3922C)">ðŸŒ</div><div class="t">African History</div><div class="m">31% complete</div></div>
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#2E9E5B,#1F7A44)">âš¡</div><div class="t">Solar Energy Basics</div><div class="m">Downloaded â¬‡</div></div>
+      </div>
+      <div class="section-title">Recommended for you</div>
+      <div class="book-row">
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#3D8BFD,#1a5fb4)">ðŸ§ </div><div class="t">Critical Thinking for Students</div><div class="m">â˜… 4.8</div></div>
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#E8890C,#b56a09)">ðŸ’¼</div><div class="t">Start Small, Scale Big</div><div class="m">â˜… 4.9</div></div>
+        <div class="book" onclick="go('s-reading')"><div class="cover" style="background:linear-gradient(135deg,#122F72,#0C2154)">ðŸ“œ</div><div class="t">Statutes & Treaties Collection</div><div class="m">Reference</div></div>
+      </div>
+    </div>
+    <div class="nav" id="nav-reader"></div>
+  </div>
+
+  <!-- 6. READING SCREEN -->
+  <div class="screen" id="s-reading">
+    <div class="appbar" style="padding-top:44px"><span class="back" onclick="go('s-reader')">â†</span><h1 style="font-size:15px">Understanding Algebra</h1><div class="spacer"></div><span class="ico">ðŸ”–</span><span class="ico" style="margin-left:12px">â¬‡</span></div>
+    <div class="reader-progress"><span></span></div>
+    <div class="reader-body">
+      <h2>Chapter 3: Solving Linear Equations</h2>
+      <p>A linear equation is like a balance scale. Whatever you do on one side, you must also do on the other side â€” otherwise the scale tips.</p>
+      <p style="margin-top:12px"><b>Example.</b> Solve for x:<br><br><b>2x + 5 = 13</b></p>
+      <p style="margin-top:12px">Step 1: Remove 5 from both sides â†’ 2x = 8<br>Step 2: Divide both sides by 2 â†’ <b>x = 4</b></p>
+      <p style="margin-top:12px;color:var(--inspia-gold-dark);background:var(--inspia-gold-light);padding:12px;border-radius:12px;font-size:13px">âœ¦ INSPIA Tip: Always check your answer by putting x = 4 back into the original equation.</p>
+      <p style="margin-top:12px">Try Practice Question 3.1 at the end of this chapter, then discuss your solution in the <b>Math Study Group</b> on Connectâ€¦</p>
+    </div>
+  </div>
+
+  <!-- 7. CONNECT FEED -->
+  <div class="screen" id="s-feed">
+    <div class="appbar"><h1>Connect</h1><div class="spacer"></div><span class="ico" onclick="go('s-compose')">âœï¸</span></div>
+    <div class="scroll">
+      <div class="tabs" style="display:flex;background:white;border-radius:999px;padding:4px;box-shadow:0 1px 3px rgba(18,47,114,0.08);margin-bottom:14px;font-size:12px">
+        <span style="flex:1;text-align:center;padding:8px;border-radius:999px;background:var(--inspia-blue);color:white;font-weight:600;cursor:pointer">Feed</span>
+        <span style="flex:1;text-align:center;padding:8px;color:var(--inspia-grey-500);cursor:pointer" onclick="go('s-communities')">Communities</span>
+        <span style="flex:1;text-align:center;padding:8px;color:var(--inspia-grey-500);cursor:pointer">Trending</span>
+      </div>
+      <div class="card post">
+        <div class="head"><div class="av">AO</div><div><b style="font-size:13px">Amina Okafor</b><div class="muted">University of Lagos Â· 2h</div></div><span class="badge b-gold" style="margin-left:auto">âœ¦ Innovator</span></div>
+        <div class="body">Just finished building a solar-powered phone charger from old parts! Full write-up is in the Innovation Club. What should I tackle next?</div>
+        <div class="acts"><span>ðŸ‘ 148</span><span>ðŸ’¬ 32</span><span>â†— Share</span><span style="margin-left:auto;color:var(--inspia-danger)">âš </span></div>
+      </div>
+      <div class="card post">
+        <div class="head"><div class="av" style="background:var(--inspia-gold-light);color:var(--inspia-gold-dark)">DN</div><div><b style="font-size:13px">Dr. Chidi Nwosu</b><div class="muted">Mentor Â· Leadership Â· 5h</div></div><span class="badge b-green" style="margin-left:auto">âœ“ Verified</span></div>
+        <div class="body">New lesson this week: "How to think like an inventor â€” 5 daily habits." Free for all INSPIA members. ðŸŽ“</div>
+        <div class="acts"><span>ðŸ‘ 512</span><span>ðŸ’¬ 87</span><span>â†— Share</span><span style="margin-left:auto;color:var(--inspia-danger)">âš </span></div>
+      </div>
+      <div class="card post">
+        <div class="head"><div class="av" style="background:#E4F5EB;color:#2E9E5B">MS</div><div><b style="font-size:13px">Math Study Group</b><div class="muted">Community Â· 8h</div></div></div>
+        <div class="body">ðŸ“ Weekly challenge: Solve Algebra Chapter 3, Question 7. Best explanation wins the â­ Top Solver badge. Results Friday!</div>
+        <div class="acts"><span>ðŸ‘ 96</span><span>ðŸ’¬ 41</span><span>â†— Share</span><span style="margin-left:auto;color:var(--inspia-danger)">âš </span></div>
+      </div>
+    </div>
+    <div class="nav" id="nav-feed"></div>
+  </div>
+
+  <!-- 8. CREATE POST -->
+  <div class="screen" id="s-compose">
+    <div class="appbar"><span class="back" onclick="go('s-feed')">âœ•</span><h1>New post</h1><div class="spacer"></div><button class="btn btn-gold" style="width:auto;padding:0 18px;min-height:34px;font-size:13px" onclick="go('s-feed')">Post</button></div>
+    <div class="compose-area">
+      <div class="row" style="margin-bottom:14px"><div class="av">AO</div><div><b style="font-size:14px">Amina Okafor</b><div class="muted">Posting to: Everyone â–¾</div></div></div>
+      <textarea placeholder="Share knowledge, ask a question, or show your projectâ€¦"></textarea>
+      <div style="display:flex;gap:16px;padding:14px 0;color:var(--inspia-blue);font-size:13px;border-top:1px solid var(--inspia-grey-50)">ðŸ“· Photo &nbsp;&nbsp; ðŸ“„ Document &nbsp;&nbsp; ðŸ“š Book reference &nbsp;&nbsp; #ï¸âƒ£ Topic</div>
+    </div>
+  </div>
+
+  <!-- 9. COMMUNITIES -->
+  <div class="screen" id="s-communities">
+    <div class="appbar"><span class="back" onclick="go('s-feed')">â†</span><h1>Communities</h1></div>
+    <div class="scroll">
+      <div class="chip-row"><span class="chip on">For you</span><span class="chip">Study</span><span class="chip">Innovation</span><span class="chip">Business</span><span class="chip">Mentorship</span></div>
+      <div class="card" style="cursor:pointer"><div class="row"><div class="av" style="background:#E4F5EB;color:#2E9E5B">ðŸ“</div><div><b style="font-size:13px">Math Study Group</b><div class="muted">24,310 members Â· Public</div></div><button class="btn btn-blue" style="width:auto;padding:0 16px;min-height:32px;font-size:12px;margin-left:auto" onclick="joinBtn(this)">Join</button></div></div>
+      <div class="card" style="cursor:pointer"><div class="row"><div class="av">ðŸ’¡</div><div><b style="font-size:13px">Innovation Club</b><div class="muted">12,480 members Â· Public</div></div><button class="btn btn-outline" style="width:auto;padding:0 16px;min-height:32px;font-size:12px;margin-left:auto;border-width:1px" onclick="joinBtn(this)">Joined âœ“</button></div></div>
+      <div class="card" style="cursor:pointer"><div class="row"><div class="av" style="background:var(--inspia-gold-light);color:var(--inspia-gold-dark)">ðŸ’¼</div><div><b style="font-size:13px">Young Entrepreneurs Network</b><div class="muted">8,942 members Â· Public</div></div><button class="btn btn-blue" style="width:auto;padding:0 16px;min-height:32px;font-size:12px;margin-left:auto" onclick="joinBtn(this)">Join</button></div></div>
+      <div class="card" style="cursor:pointer"><div class="row"><div class="av" style="background:#FDF0E0;color:#E8890C">âš–ï¸</div><div><b style="font-size:13px">Law Students Forum</b><div class="muted">5,120 members Â· Public</div></div><button class="btn btn-blue" style="width:auto;padding:0 16px;min-height:32px;font-size:12px;margin-left:auto" onclick="joinBtn(this)">Join</button></div></div>
+      <div class="card" style="cursor:pointer"><div class="row"><div class="av" style="background:var(--inspia-blue);color:white">ðŸŽ“</div><div><b style="font-size:13px">UNILAG Official Community</b><div class="muted">Institution Â· Verified</div></div><span class="badge b-blue" style="margin-left:auto">Private</span></div></div>
+    </div>
+    <div class="nav" id="nav-comm"></div>
+  </div>
+
+  <!-- 10. MENTOR HOME -->
+  <div class="screen" id="s-mentor">
+    <div class="appbar"><h1>Mentor</h1></div>
+    <div class="scroll">
+      <div class="hero" style="cursor:pointer" onclick="go('s-lesson')">
+        <b>ðŸŽ“ Leadership Masterclass</b>
+        <p>Module 2 of 8 Â· Thinking like an inventor</p>
+        <button class="btn btn-gold">Continue Lesson</button>
+      </div>
+      <div class="section-title">Your mentors</div>
+      <div class="card"><div class="row"><div class="av" style="background:var(--inspia-gold-light);color:var(--inspia-gold-dark)">DN</div><div><b style="font-size:13px">Dr. Chidi Nwosu</b><div class="muted">Leadership & Career Â· â˜… 4.9</div></div><span class="badge b-green" style="margin-left:auto">Online</span></div></div>
+      <div class="card"><div class="row"><div class="av" style="background:#E4F5EB;color:#2E9E5B">FA</div><div><b style="font-size:13px">Fatima Adeyemi</b><div class="muted">Entrepreneurship Â· â˜… 4.8</div></div><span class="badge b-blue" style="margin-left:auto">Next: Thu 4pm</span></div></div>
+      <div class="section-title">Programs for you</div>
+      <div class="card" style="cursor:pointer" onclick="go('s-lesson')"><b style="font-size:13px">Self-Discovery & Purpose</b><div class="muted" style="margin-top:4px">6 lessons Â· Certificate on completion</div><div style="height:5px;background:var(--inspia-grey-50);border-radius:99px;margin-top:8px"><span style="display:block;width:33%;height:100%;background:var(--inspia-gold);border-radius:99px"></span></div></div>
+      <div class="card" style="cursor:pointer" onclick="go('s-lesson')"><b style="font-size:13px">Financial Literacy Foundations</b><div class="muted" style="margin-top:4px">8 lessons Â· New âœ¦</div></div>
+    </div>
+    <div class="nav" id="nav-mentor"></div>
+  </div>
+
+  <!-- 11. LESSON PLAYER -->
+  <div class="screen" id="s-lesson">
+    <div class="appbar"><span class="back" onclick="go('s-mentor')">â†</span><h1 style="font-size:15px">Module 2: Thinking like an inventor</h1></div>
+    <div class="scroll">
+      <div class="video-block">â–¶</div>
+      <b style="font-size:14px">The 5 daily habits of inventors</b>
+      <p class="muted" style="margin:4px 0 14px">Dr. Chidi Nwosu Â· 14 min Â· Leadership Masterclass</p>
+      <div class="lesson"><div class="n done">âœ“</div><div><b>Habit 1: Curiosity journal</b><span>Completed</span></div><span class="st badge b-green">Done</span></div>
+      <div class="lesson"><div class="n">2</div><div><b>Habit 2: Question everything</b><span>8 min Â· Current</span></div><span class="st badge b-gold">Playing</span></div>
+      <div class="lesson"><div class="n">3</div><div><b>Habit 3: Build before you're ready</b><span>11 min</span></div></div>
+      <div class="lesson"><div class="n">4</div><div><b>Quiz: Inventor mindset</b><span>5 questions</span></div></div>
+      <button class="btn btn-blue" style="margin-top:8px">Continue Module</button>
+    </div>
+  </div>
+
+  <!-- 12. BUSINESS -->
+  <div class="screen" id="s-business">
+    <div class="appbar"><h1>Business</h1></div>
+    <div class="scroll">
+      <div class="hero">
+        <b>âœ¦ INSPIA Innovation Challenge</b>
+        <p>Win $5,000 seed funding + 6 months of mentorship.</p>
+        <button class="btn btn-gold">Submit Your Project</button>
+      </div>
+      <div class="section-title">Learn entrepreneurship</div>
+      <div class="card" style="cursor:pointer"><div class="row"><div class="av" style="background:#FDF0E0;color:#E8890C">ðŸ’¡</div><div><b style="font-size:13px">From Idea to First Customer</b><div class="muted">Free course Â· 5 lessons</div></div><span class="arr" style="margin-left:auto;color:var(--inspia-grey-200)">â€º</span></div></div>
+      <div class="card" style="cursor:pointer"><div class="row"><div class="av" style="background:var(--inspia-blue-light);color:var(--inspia-blue)">ðŸ“Š</div><div><b style="font-size:13px">Financial Literacy: Budgeting for Startups</b><div class="muted">Premium âœ¦ Â· Certificate</div></div><span class="arr" style="margin-left:auto;color:var(--inspia-grey-200)">â€º</span></div></div>
+      <div class="section-title">Project showcase</div>
+      <div class="card"><div class="row"><div class="av">KO</div><div><b style="font-size:13px">Kwame's Water Filter</b><div class="muted">Ghana Â· Seeking partners</div></div><span class="badge b-gold" style="margin-left:auto">âœ¦ Featured</span></div></div>
+    </div>
+    <div class="nav" id="nav-biz"></div>
+  </div>
+
+  <!-- 13. SEARCH -->
+  <div class="screen" id="s-search">
+    <div class="appbar"><span class="back" onclick="go('s-home')">â†</span><div style="flex:1;background:white;border-radius:999px;padding:9px 14px;color:var(--inspia-grey-500);font-size:13px">ðŸ” solar energyâ€¦</div></div>
+    <div class="scroll">
+      <div class="section-title">Top result</div>
+      <div class="card" style="cursor:pointer" onclick="go('s-reading')"><div class="row"><div class="book" style="width:auto"><div class="cover" style="width:48px;height:64px;font-size:18px">âš¡</div></div><div><b style="font-size:13px">Solar Energy Basics</b><div class="muted">Book Â· Skills Â· â˜… 4.7 Â· 12,400 readers</div></div></div></div>
+      <div class="section-title">Also in Books</div>
+      <div class="card" style="cursor:pointer"><div class="row"><div><b style="font-size:13px">Renewable Energy in Africa</b><div class="muted">Research paper Â· 2025</div></div></div></div>
+      <div class="section-title">People & Communities</div>
+      <div class="card" style="cursor:pointer" onclick="go('s-communities')"><div class="row"><div class="av" style="background:#E4F5EB;color:#2E9E5B">âš¡</div><div><b style="font-size:13px">Solar Innovators Africa</b><div class="muted">Community Â· 3,210 members</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- 14. PROFILE -->
+  <div class="screen" id="s-profile">
+    <div class="prof-head">
+      <div class="av">AO</div>
+      <h2>Amina Okafor</h2>
+      <p>Student Innovator Â· University of Lagos</p>
+      <div style="margin-top:10px"><span class="badge b-gold">âœ¦ Innovator</span> <span class="badge b-blue" style="background:rgba(255,255,255,0.15);color:white">ðŸ”¥ 7-day streak</span></div>
+    </div>
+    <div class="scroll">
+      <div class="stat-row">
+        <div class="stat"><b>12</b><span>Books</span></div>
+        <div class="stat"><b>3</b><span>Projects</span></div>
+        <div class="stat"><b>486</b><span>Connections</span></div>
+      </div>
+      <div class="list-item" onclick="go('s-settings')"><span class="ic">âš™ï¸</span>Settings<span class="arr">â€º</span></div>
+      <div class="list-item"><span class="ic">ðŸ…</span>My certificates<span class="arr">â€º</span></div>
+      <div class="list-item"><span class="ic">â¬‡</span>Offline downloads<span class="arr">â€º</span></div>
+      <div class="list-item"><span class="ic">âœ¦</span>Go Premium<span class="badge b-gold" style="margin-left:auto;margin-right:8px">New</span><span class="arr">â€º</span></div>
+      <div class="list-item" onclick="go('s-welcome')" style="color:var(--inspia-danger)"><span class="ic">ðŸšª</span>Log out</div>
+    </div>
+    <div class="nav" id="nav-profile"></div>
+  </div>
+
+  <!-- 15. NOTIFICATIONS -->
+  <div class="screen" id="s-notif">
+    <div class="appbar"><span class="back" onclick="go('s-home')">â†</span><h1>Notifications</h1></div>
+    <div class="scroll">
+      <div class="card"><div class="row"><div class="av" style="background:var(--inspia-gold-light);color:var(--inspia-gold-dark)">DN</div><div><b style="font-size:13px">Dr. Chidi Nwosu replied to you</b><div class="muted">"Great question, Amina â€” see my video answerâ€¦" Â· 1h</div></div></div></div>
+      <div class="card"><div class="row"><div class="av">ðŸ’¡</div><div><b style="font-size:13px">Innovation Club: 5 new posts today</b><div class="muted">Your post reached 148 people Â· 3h</div></div></div></div>
+      <div class="card"><div class="row"><div class="av" style="background:#E4F5EB;color:#2E9E5B">âœ“</div><div><b style="font-size:13px">Module 1 completed!</b><div class="muted">Leadership Masterclass Â· Certificate unlocked Â· 1d</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- 16. SETTINGS -->
+  <div class="screen" id="s-settings">
+    <div class="appbar"><span class="back" onclick="go('s-profile')">â†</span><h1>Settings</h1></div>
+    <div class="scroll">
+      <div class="list-item"><span class="ic">ðŸ‘¤</span>Edit profile<span class="arr">â€º</span></div>
+      <div class="list-item"><span class="ic">ðŸ”’</span>Privacy & security<span class="arr">â€º</span></div>
+      <div class="list-item"><span class="ic">ðŸ””</span>Notifications<div class="toggle"></div></div>
+      <div class="list-item"><span class="ic">ðŸŒ™</span>Dark mode<div class="toggle off"></div></div>
+      <div class="list-item"><span class="ic">â¬‡</span>Download over Wi-Fi only<div class="toggle"></div></div>
+      <div class="list-item"><span class="ic">ðŸŒ</span>Language<span class="muted" style="margin-left:auto;margin-right:8px">English</span><span class="arr">â€º</span></div>
+      <div class="list-item"><span class="ic">ðŸ“„</span>Terms & Privacy Policy<span class="arr">â€º</span></div>
+      <p class="muted" style="text-align:center;margin-top:20px">INSPIA v1.0 (Prototype) âœ¦</p>
+    </div>
+  </div>
+
+</div></div>
+
+<div class="proto-note" style="margin-top:20px">
+  <b>Tell the team what confused you</b> â€” your notes become Phase 5 fixes.
+</div>
+
+<script>
+  var current = 's-welcome';
+  var navScreens = { home:'s-home', learn:'s-reader', connect:'s-feed', mentor:'s-mentor', biz:'s-business', profile:'s-profile' };
+  function buildNav(activeKey){
+    var items = [ ['home','ðŸ ','Home'], ['learn','ðŸ“–','Learn'], ['connect','ðŸ‘¥','Connect'], ['mentor','ðŸŽ“','Mentor'], ['biz','ðŸ’¼','Business'] ];
+    var html = items.map(function(it){
+      return '<div class="'+(it[0]===activeKey?'on':'')+'" onclick="nav(\''+it[0]+'\')"><span class="ic">'+it[1]+'</span>'+it[2]+'</div>';
+    }).join('');
+    html += '<div class="'+(activeKey==='profile'?'on':'')+'" onclick="nav(\'profile\')"><span class="ic">ðŸ‘¤</span>You</div>';
+    return html;
+  }
+  ['home','reader','feed','comm','mentor','biz','profile'].forEach(function(k){
+    var map = { home:'home', reader:'learn', feed:'connect', comm:'connect', mentor:'mentor', biz:'biz', profile:'profile' };
+    var el = document.getElementById('nav-'+k);
+    if (el) el.innerHTML = buildNav(map[k]);
+  });
+  function go(id){
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    current = id;
+    var sc = document.getElementById(id).querySelector('.scroll');
+    if (sc) sc.scrollTop = 0;
+  }
+  function nav(key, forced){ go(forced || navScreens[key]); }
+  function pick(el){
+    el.parentNode.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
+    el.classList.add('on');
+  }
+  function joinBtn(btn){
+    if (btn.textContent.indexOf('Join') === 0) { btn.textContent = 'Joined âœ“'; btn.className = 'btn btn-outline'; btn.style.cssText = 'width:auto;padding:0 16px;min-height:32px;font-size:12px;margin-left:auto;border-width:1px'; }
+    else { btn.textContent = 'Join'; btn.className = 'btn btn-blue'; btn.style.cssText = 'width:auto;padding:0 16px;min-height:32px;font-size:12px;margin-left:auto'; }
+  }
+</script>
+</body>
+</html>
+

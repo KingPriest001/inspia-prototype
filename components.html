@@ -1,0 +1,323 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSPIA â€” Component Library v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =============================================
+   INSPIA DESIGN TOKENS â€” v1.0 (Phase 0)
+   The single source of truth for all styling.
+   Every colour, size, and spacing value used in
+   the app MUST come from this file.
+   ============================================= */
+
+/* ---- FONTS ---- */
+
+:root {
+  /* ---- COLOURS: PRIMARY ---- */
+  --inspia-blue:        #122F72;   /* Royal Blue â€” headers, primary actions   */
+  --inspia-blue-dark:   #0C2154;   /* Pressed states, dark backgrounds        */
+  --inspia-blue-light:  #E8ECF7;   /* Soft tint for section backgrounds       */
+  --inspia-gold:        #D4AF37;   /* Deep Gold â€” accents, spark, highlights  */
+  --inspia-gold-dark:   #B3922C;   /* Gold pressed state                      */
+  --inspia-gold-light:  #F7EFDA;   /* Gold tint backgrounds                   */
+
+  /* ---- COLOURS: NEUTRALS ---- */
+  --inspia-white:       #FFFFFF;
+  --inspia-black:       #111111;
+  --inspia-grey-50:     #F0F0F0;   /* Soft Grey â€” card & input backgrounds    */
+  --inspia-grey-200:    #D9D9D9;   /* Borders, dividers                       */
+  --inspia-grey-500:    #757575;   /* Secondary text                          */
+  --inspia-grey-700:    #444444;   /* Body text on light                      */
+
+  /* ---- COLOURS: SEMANTIC (status) ---- */
+  --inspia-success:     #2E9E5B;   /* Digital green â€” success, online         */
+  --inspia-warning:     #E8890C;   /* Innovation orange â€” warnings            */
+  --inspia-danger:      #C9302C;   /* Errors, destructive actions             */
+  --inspia-info:        #3D8BFD;   /* Light tech blue â€” tips, info            */
+
+  /* ---- TYPOGRAPHY ---- */
+  --font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+  --text-title:    28px;  /* Screen titles            */
+  --text-heading:  22px;  /* Section headings         */
+  --text-subtitle: 17px;  /* Card titles, subtitles   */
+  --text-body:     15px;  /* Normal reading text      */
+  --text-small:    13px;  /* Captions, labels         */
+  --text-tiny:     11px;  /* Badges, timestamps       */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --line-height: 1.55;
+
+  /* ---- SPACING (4pt system) ---- */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 20px;  --space-6: 24px;  --space-8: 32px;  --space-10: 40px;
+  --space-12: 48px; --space-16: 64px;
+
+  /* ---- SHAPES ---- */
+  --radius-small:  8px;    /* Inputs, small chips      */
+  --radius-medium: 16px;   /* Cards, popups            */
+  --radius-large:  24px;   /* Sheets, hero cards       */
+  --radius-full:   999px;  /* Buttons, avatars, pills  */
+
+  /* ---- SHADOWS ---- */
+  --shadow-1: 0 1px 3px rgba(18, 47, 114, 0.08);
+  --shadow-2: 0 4px 12px rgba(18, 47, 114, 0.12);
+  --shadow-3: 0 12px 32px rgba(18, 47, 114, 0.18);
+
+  /* ---- INTERACTION ---- */
+  --transition: 180ms ease;
+  --tap-target: 44px;  /* Minimum tappable size (accessibility) */
+}
+
+</style>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font-family); background: var(--inspia-grey-50); color: var(--inspia-grey-700); line-height: var(--line-height); }
+  .page { max-width: 1000px; margin: 0 auto; padding: var(--space-8) var(--space-5); }
+  header.doc { background: var(--inspia-blue); color: white; padding: var(--space-8) var(--space-5); border-radius: var(--radius-large); margin-bottom: var(--space-8); }
+  header.doc h1 { font-size: var(--text-title); font-weight: var(--weight-bold); }
+  header.doc p { color: var(--inspia-gold); font-size: var(--text-small); letter-spacing: 2px; }
+  .section { background: white; border-radius: var(--radius-medium); box-shadow: var(--shadow-1); padding: var(--space-6); margin-bottom: var(--space-6); }
+  .section h2 { font-size: var(--text-heading); color: var(--inspia-blue); margin-bottom: var(--space-2); }
+  .section .note { font-size: var(--text-small); color: var(--inspia-grey-500); margin-bottom: var(--space-5); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-bottom: var(--space-4); }
+  .swatch { width: 120px; border-radius: var(--radius-small); overflow: hidden; box-shadow: var(--shadow-1); font-size: var(--text-tiny); }
+  .swatch .color { height: 64px; }
+  .swatch .label { padding: var(--space-2); background: white; }
+  .swatch .label b { display: block; font-size: var(--text-small); color: var(--inspia-black); }
+
+  /* BUTTONS */
+  .btn { min-height: var(--tap-target); padding: 0 var(--space-6); border: none; border-radius: var(--radius-full); font-family: var(--font-family); font-size: var(--text-body); font-weight: var(--weight-semibold); cursor: pointer; transition: all var(--transition); display: inline-flex; align-items: center; gap: var(--space-2); }
+  .btn-primary { background: var(--inspia-blue); color: white; }
+  .btn-primary:active { background: var(--inspia-blue-dark); }
+  .btn-gold { background: var(--inspia-gold); color: var(--inspia-black); }
+  .btn-outline { background: transparent; color: var(--inspia-blue); border: 2px solid var(--inspia-blue); }
+  .btn-ghost { background: var(--inspia-blue-light); color: var(--inspia-blue); }
+  .btn-danger { background: var(--inspia-danger); color: white; }
+  .btn:disabled { background: var(--inspia-grey-200); color: var(--inspia-grey-500); cursor: not-allowed; }
+  .btn-loading { position: relative; color: transparent; }
+  .btn-loading::after { content: ""; position: absolute; width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; left: calc(50% - 9px); top: calc(50% - 9px); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* INPUTS */
+  .field { margin-bottom: var(--space-4); }
+  .field label { display: block; font-size: var(--text-small); font-weight: var(--weight-medium); color: var(--inspia-blue); margin-bottom: var(--space-1); }
+  .input { width: 100%; min-height: var(--tap-target); padding: 0 var(--space-4); border: 2px solid var(--inspia-grey-200); border-radius: var(--radius-small); font-family: var(--font-family); font-size: var(--text-body); background: white; transition: border var(--transition); }
+  .input:focus { outline: none; border-color: var(--inspia-blue); }
+  .input.error { border-color: var(--inspia-danger); }
+  .field .hint { font-size: var(--text-small); color: var(--inspia-grey-500); margin-top: var(--space-1); }
+  .field .hint.error { color: var(--inspia-danger); }
+  .search-bar { display: flex; align-items: center; background: var(--inspia-grey-50); border: 2px solid var(--inspia-grey-200); border-radius: var(--radius-full); padding: 0 var(--space-4); min-height: var(--tap-target); gap: var(--space-2); color: var(--inspia-grey-500); }
+  .search-bar input { border: none; background: transparent; flex: 1; font-family: var(--font-family); font-size: var(--text-body); outline: none; }
+
+  /* CARDS */
+  .card { background: white; border-radius: var(--radius-medium); box-shadow: var(--shadow-1); padding: var(--space-4); width: 240px; }
+  .card .thumb { height: 110px; border-radius: var(--radius-small); background: linear-gradient(135deg, var(--inspia-blue), var(--inspia-blue-dark)); margin-bottom: var(--space-3); display: flex; align-items: center; justify-content: center; color: var(--inspia-gold); font-size: 32px; }
+  .card h3 { font-size: var(--text-subtitle); color: var(--inspia-black); font-weight: var(--weight-semibold); }
+  .card .meta { font-size: var(--text-small); color: var(--inspia-grey-500); }
+  .card .progress { height: 6px; background: var(--inspia-grey-50); border-radius: var(--radius-full); margin-top: var(--space-3); overflow: hidden; }
+  .card .progress span { display: block; height: 100%; background: var(--inspia-gold); border-radius: var(--radius-full); }
+
+  /* POST / FEED */
+  .post { background: white; border-radius: var(--radius-medium); box-shadow: var(--shadow-1); padding: var(--space-4); margin-bottom: var(--space-4); }
+  .post .head { display: flex; gap: var(--space-3); align-items: center; margin-bottom: var(--space-3); }
+  .avatar { width: 44px; height: 44px; border-radius: var(--radius-full); background: var(--inspia-blue-light); color: var(--inspia-blue); display: flex; align-items: center; justify-content: center; font-weight: var(--weight-bold); flex-shrink: 0; }
+  .avatar.gold { background: var(--inspia-gold-light); color: var(--inspia-gold-dark); }
+  .post .head .who b { font-size: var(--text-body); color: var(--inspia-black); display: block; }
+  .post .head .who span { font-size: var(--text-small); color: var(--inspia-grey-500); }
+  .post .actions { display: flex; gap: var(--space-6); margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--inspia-grey-50); font-size: var(--text-small); color: var(--inspia-grey-500); }
+  .post .actions span { cursor: pointer; display: flex; gap: var(--space-1); align-items: center; }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; padding: 2px var(--space-3); border-radius: var(--radius-full); font-size: var(--text-tiny); font-weight: var(--weight-semibold); }
+  .badge-blue { background: var(--inspia-blue-light); color: var(--inspia-blue); }
+  .badge-gold { background: var(--inspia-gold-light); color: var(--inspia-gold-dark); }
+  .badge-green { background: #E4F5EB; color: var(--inspia-success); }
+  .badge-orange { background: #FDF0E0; color: var(--inspia-warning); }
+
+  /* TABS + NAV */
+  .tabs { display: flex; background: white; border-radius: var(--radius-full); padding: var(--space-1); box-shadow: var(--shadow-1); gap: var(--space-1); }
+  .tabs span { flex: 1; text-align: center; padding: var(--space-2); border-radius: var(--radius-full); font-size: var(--text-small); font-weight: var(--weight-medium); color: var(--inspia-grey-500); cursor: pointer; }
+  .tabs span.active { background: var(--inspia-blue); color: white; }
+  .bottom-nav { display: flex; background: white; border-radius: var(--radius-medium); box-shadow: var(--shadow-2); overflow: hidden; }
+  .bottom-nav div { flex: 1; text-align: center; padding: var(--space-3) 0; font-size: var(--text-tiny); color: var(--inspia-grey-500); cursor: pointer; }
+  .bottom-nav div .ico { display: block; font-size: 20px; margin-bottom: 2px; }
+  .bottom-nav div.active { color: var(--inspia-blue); font-weight: var(--weight-semibold); }
+  .bottom-nav div.active .ico { color: var(--inspia-gold); }
+
+  /* POPUP */
+  .popup-demo { background: var(--inspia-grey-50); border-radius: var(--radius-medium); padding: var(--space-8); text-align: center; }
+  .popup { background: white; border-radius: var(--radius-large); box-shadow: var(--shadow-3); padding: var(--space-6); max-width: 300px; margin: 0 auto; }
+  .popup .ico { width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--inspia-gold-light); color: var(--inspia-gold-dark); display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto var(--space-4); }
+  .popup h3 { color: var(--inspia-black); font-size: var(--text-subtitle); margin-bottom: var(--space-2); }
+  .popup p { font-size: var(--text-small); color: var(--inspia-grey-500); margin-bottom: var(--space-5); }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: var(--space-8); color: var(--inspia-grey-500); }
+  .empty .big { font-size: 44px; margin-bottom: var(--space-3); }
+  .empty b { display: block; color: var(--inspia-black); font-size: var(--text-subtitle); margin-bottom: var(--space-1); }
+  .type-demo span { display: block; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="doc">
+    <p>INSPIA DESIGN SYSTEM</p>
+    <h1>Component Library v1.0</h1>
+    <p style="color:#F0F0F0; letter-spacing:0; margin-top:8px;">Every screen in the app is built from these blocks. Change a component here, and it changes everywhere.</p>
+  </header>
+
+  <div class="section">
+    <h2>1. Colour Palette</h2>
+    <p class="note">Royal Blue leads. Gold accents. Grey supports. Never use gold as a large background.</p>
+    <div class="row">
+      <div class="swatch"><div class="color" style="background:#122F72"></div><div class="label"><b>Royal Blue</b>#122F72 â€” primary</div></div>
+      <div class="swatch"><div class="color" style="background:#D4AF37"></div><div class="label"><b>Deep Gold</b>#D4AF37 â€” accent</div></div>
+      <div class="swatch"><div class="color" style="background:#FFFFFF; border:1px solid #D9D9D9"></div><div class="label"><b>White</b>#FFFFFF</div></div>
+      <div class="swatch"><div class="color" style="background:#111111"></div><div class="label"><b>Black</b>#111111</div></div>
+      <div class="swatch"><div class="color" style="background:#F0F0F0"></div><div class="label"><b>Soft Grey</b>#F0F0F0</div></div>
+      <div class="swatch"><div class="color" style="background:#2E9E5B"></div><div class="label"><b>Success</b>#2E9E5B</div></div>
+      <div class="swatch"><div class="color" style="background:#E8890C"></div><div class="label"><b>Warning</b>#E8890C</div></div>
+      <div class="swatch"><div class="color" style="background:#C9302C"></div><div class="label"><b>Danger</b>#C9302C</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>2. Typography â€” Poppins</h2>
+    <p class="note">Title 28 Â· Heading 22 Â· Subtitle 17 Â· Body 15 Â· Small 13 Â· Tiny 11</p>
+    <div class="type-demo">
+      <span style="font-size:28px;font-weight:700;color:#122F72">Knowledge. Innovation. Leadership.</span>
+      <span style="font-size:22px;font-weight:700;color:#111">Section Heading</span>
+      <span style="font-size:17px;font-weight:600;color:#111">Card subtitle title</span>
+      <span style="font-size:15px;font-weight:400">Body text â€” INSPIA empowers young Africans with knowledge, skills and network.</span>
+      <span style="font-size:13px;font-weight:400;color:#757575">Small â€” Secondary information and captions</span>
+      <span style="font-size:11px;font-weight:500;color:#757575">TINY â€” BADGES & TIMESTAMPS</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>3. Buttons</h2>
+    <p class="note">Minimum height 44px (thumb-friendly). One primary button per screen.</p>
+    <div class="row">
+      <button class="btn btn-primary">Get Started</button>
+      <button class="btn btn-gold">Go Premium âœ¦</button>
+      <button class="btn btn-outline">Learn More</button>
+      <button class="btn btn-ghost">Skip</button>
+      <button class="btn btn-danger">Report</button>
+      <button class="btn btn-primary" disabled>Disabled</button>
+      <button class="btn btn-primary btn-loading">Loading</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>4. Inputs & Search</h2>
+    <p class="note">Every error message tells the user how to fix the problem.</p>
+    <div style="max-width:360px">
+      <div class="field">
+        <label>Full name</label>
+        <input class="input" placeholder="e.g. Amina Okafor">
+        <div class="hint">As it should appear on your certificate</div>
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <input class="input error" value="amina@">
+        <div class="hint error">Please enter a complete email, e.g. amina@gmail.com</div>
+      </div>
+      <div class="search-bar">ðŸ” <input placeholder="Search books, communities, mentorsâ€¦"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>5. Cards</h2>
+    <p class="note">Book card, community card, mentor card â€” same shell, different content.</p>
+    <div class="row">
+      <div class="card">
+        <div class="thumb">ðŸ“–</div>
+        <h3>Understanding Algebra</h3>
+        <div class="meta">JSS3 Â· Mathematics</div>
+        <div class="progress"><span style="width:64%"></span></div>
+        <div class="meta" style="margin-top:6px">64% completed</div>
+      </div>
+      <div class="card">
+        <div class="thumb" style="background:linear-gradient(135deg,#D4AF37,#B3922C)">ðŸ’¡</div>
+        <h3>Innovation Club</h3>
+        <div class="meta">12,480 members Â· Public</div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px">Join</button>
+      </div>
+      <div class="card">
+        <div class="thumb" style="background:linear-gradient(135deg,#2E9E5B,#1F7A44)">ðŸŽ“</div>
+        <h3>Dr. Chidi Nwosu</h3>
+        <div class="meta">Leadership & Career Mentor</div>
+        <div class="row" style="margin-top:12px;margin-bottom:0"><span class="badge badge-gold">â˜… 4.9</span><span class="badge badge-blue">Verified</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>6. Social Post (INSPIA Connect)</h2>
+    <p class="note">Purposeful content only. Report button always visible.</p>
+    <div class="post" style="max-width:520px">
+      <div class="head">
+        <div class="avatar">AO</div>
+        <div class="who"><b>Amina Okafor</b><span>University of Lagos Â· 2 hours ago</span></div>
+        <span class="badge badge-gold" style="margin-left:auto">âœ¦ Innovator</span>
+      </div>
+      <p>Just finished building a solar-powered phone charger from old parts! Full project write-up is in the Innovation Club. What should I tackle next?</p>
+      <div class="actions"><span>ðŸ‘ Like Â· 148</span><span>ðŸ’¬ Comment Â· 32</span><span>â†— Share</span><span style="margin-left:auto;color:#C9302C">âš  Report</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>7. Badges & Tabs</h2>
+    <div class="row" style="margin-bottom:12px">
+      <span class="badge badge-blue">Student</span>
+      <span class="badge badge-gold">âœ¦ Premium</span>
+      <span class="badge badge-green">âœ“ Verified Mentor</span>
+      <span class="badge badge-orange">ðŸ”¥ 7-day streak</span>
+    </div>
+    <div class="tabs" style="max-width:420px"><span class="active">Feed</span><span>Communities</span><span>Trending</span></div>
+  </div>
+
+  <div class="section">
+    <h2>8. Bottom Navigation (phone)</h2>
+    <p class="note">Five destinations maximum. INSPIA icon = home.</p>
+    <div class="bottom-nav" style="max-width:460px">
+      <div class="active"><span class="ico">ðŸ </span>Home</div>
+      <div><span class="ico">ðŸ“–</span>Learn</div>
+      <div><span class="ico">ðŸ‘¥</span>Connect</div>
+      <div><span class="ico">ðŸŽ“</span>Mentor</div>
+      <div><span class="ico">ðŸ’¼</span>Business</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>9. Popups & Empty States</h2>
+    <p class="note">Empty states teach the user what to do next â€” never a blank screen.</p>
+    <div class="row" style="align-items:stretch">
+      <div class="popup-demo" style="flex:1">
+        <div class="popup">
+          <div class="ico">âœ¦</div>
+          <h3>Welcome to INSPIA!</h3>
+          <p>Complete your profile so we can recommend the right books, mentors and communities for you.</p>
+          <button class="btn btn-primary" style="width:100%;justify-content:center">Complete Profile</button>
+          <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:8px;border:none">Maybe later</button>
+        </div>
+      </div>
+      <div class="popup-demo" style="flex:1">
+        <div class="empty">
+          <div class="big">ðŸ“š</div>
+          <b>Your bookshelf is empty</b>
+          Save books to read offline â€” they'll appear here.
+          <div style="margin-top:16px"><button class="btn btn-outline">Browse Library</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
