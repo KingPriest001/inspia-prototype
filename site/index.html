@@ -29,6 +29,11 @@
 
   /* HERO */
   .hero{background:linear-gradient(165deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff;padding:150px 0 90px;position:relative;overflow:hidden}
+  /* Founder's photo behind the hero — auto-hidden by the gradient if the file is absent */
+  .hero-photo{position:absolute;inset:-25px;background:url('assets/welcome-bg.jpg') center/cover no-repeat;filter:blur(9px) saturate(1.15);transform:scale(1.05);z-index:0}
+  .hero-veil{position:absolute;inset:0;background:linear-gradient(165deg,rgba(12,33,84,.84),rgba(9,24,56,.90));z-index:1}
+  .hero .glow{z-index:2}
+  .hero .inner{position:relative;z-index:3}
   .hero .glow{position:absolute;border-radius:50%;filter:blur(4px)}
   .hero .g1{width:220px;height:220px;left:6%;top:18%;background:radial-gradient(circle,rgba(212,175,55,.28),transparent 70%)}
   .hero .g2{width:300px;height:300px;right:4%;top:8%;background:radial-gradient(circle,rgba(61,139,253,.22),transparent 70%)}
@@ -125,6 +130,8 @@
 </nav>
 
 <header class="hero" id="top">
+  <div class="hero-photo"></div>
+  <div class="hero-veil"></div>
   <div class="glow g1"></div><div class="glow g2"></div>
   <div class="wrap inner">
     <div>
